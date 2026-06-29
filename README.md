@@ -1,126 +1,30 @@
-🌸 AromaFlow: Automated Perfume Data & Chart Pipeline
-
-Welcome to AromaFlow — a high-performance Python web scraping and automation toolkit designed to extract accurate, high-quality perfume data and dynamic visual charts from Fragrantica, the definitive reference database for fragrance enthusiasts.
-
-💡 Why We Built This (And Why Your Business Needs It)
-
-The Problem: The Data Entry Bottleneck
-
-In modern e-commerce, time is the ultimate leverage. For boutique and scale-up perfume galleries alike, sourcing accurate product data and translating complex, dynamic charts into usable web elements is traditionally a slow, human-intensive process. Teams easily sink dozens of hours weekly into copy-pasting olfactory notes, translating graphics, and manually formatting specifications for new catalog entries. This manual workflow is highly error-prone, challenging to scale, and distracts high-value talent from core business activities.
-
-The Solution: Strategic Automation
-
-We built AromaFlow to completely eliminate this operational friction. By programmatically interface-scraping dynamic Vue.js web applications, the script instantly extracts structured fragrance datasets. It handles the heavy lifting, turning an outdated multi-step editorial workflow into a single, automated, and deterministic software pipeline.
-
-The Immediate Benefits
-
-⏱️ Unmatched Time & Resource Optimization: Turns hours of repetitive manual data entry into a fast execution script that compiles an entire product's profile in seconds.
-
-📈 Programmatic SEO Generation: Automates the drafting of rich, keyword-optimized content derived directly from factual olfactory pyramids, elevating search rankings effortlessly.
-
-✨ Seamless Visual Assets: Extracts complex frontend visual charts (such as Longevity, Sillage, Seasons, and Gender) and renders them as localized Tailwind CSS/HTML components. This adds interactive, high-fidelity customer-facing visual guides to your website out-of-the-box.
-
-Why Every Modern Business Needs Pipelines Like This
-
-No modern brand can scale if its human talent is acting as human middleware between databases. Implementing custom automation pipelines like AromaFlow transforms information-gathering from an overhead cost into a scalable programmatic asset. By offloading data collection, compilation, and standard visual rendering to intelligent scrapers, businesses can re-invest their valuable hours where it matters most: honing the Customer Experience (CX), crafting brand narratives, building strategic partnerships, and accelerating sales.
-
-🚀 Key Features
-
-🧠 Automated SEO Content Generation: Programmatically parses scraped olfactory profiles to generate detailed, keyword-rich copy for perfume product listings.
-
-📊 Dynamic Chart Extraction & Conversion: Hooks into client-side Vue.js app states, extracting raw values for Longevity, Sillage, Gender, Seasons, and Notes to generate offline Tailwind CSS components.
-
-🖼️ Visual Product Enhancement: Instantly outputs beautiful, self-contained interactive visual widgets ready to drop directly into your gallery's custom product pages.
-
-⚡ Resilient Dynamic Scraping: Built on top of Playwright to gracefully navigate single-page application (SPA) environments, asynchronous API calls, and heavy dynamic rendering.
-
-🛠️ Tech Stack
-
-Python 3.9+ - Scripting engine, file system management, and structured data serialization.
-
-Playwright - Headless browser automation framework utilized to fetch dynamically loaded assets.
-
-Tailwind CSS - Modern utility-first styling system used to render beautiful, responsive visual offline charts.
-
-JavaScript - Custom injected evaluation layers to extract raw state objects directly from client-side DOM.
-
-⚙️ Prerequisites & Installation
-
-To get started, make sure you have Python 3.9 or higher installed on your machine.
-
-Clone the repository:
-
-git clone https://github.com/yourusername/aromaflow.git
-cd aromaflow
-
-
-Set up a virtual environment (Recommended):
-
+🧪 Fragrantica Automation Engine (AromaForge)An enterprise-grade Python web scraping and automation framework designed to extract rich olfactory data and dynamic consumer metrics from Fragrantica. This engine programmatically bypasses dynamic frontend complexities to compile high-fidelity perfume profiles and translate live Vue.js data visualizations into responsive, offline-ready HTML/Tailwind CSS components.🎯 The Objective & Business PhilosophyIn the competitive landscape of luxury fragrance e-commerce, content velocity and user experience (UX) are primary vectors for conversion. Traditionally, cataloging a single artisanal fragrance required hours of manual research, metadata entry, and graphic asset production.AromaForge was engineered to redefine this workflow through the lens of continuous business optimization:Human Capital Reallocation: By automating the ingestion of complex technical profiles (olfactory notes, performance tracking, consumer sentiment), this framework saves countless operational hours daily.Strategic Focus: Instead of executing repetitive data entry, your core team is empowered to focus entirely on high-value initiatives—refining user personas, designing immersive digital gallery experiences, optimizing customer support funnels, and building long-term business strategies.Data Integrity as a Standard: Automating extraction directly from a definitive reference source eliminates human transcription errors, providing your store with instantly credible, highly standardized product technical sheets.🚀 Key Features⚡ Dynamic Vue.js Component Extraction: Intercepts and parses asynchronous UI states directly from Fragrantica's dynamic frontend layout.📊 Offline Tailwind Component Compilation: Automatically converts live voter data metrics (Longevity, Sillage, Gender profiles, Seasonal behavior, and Olfactory Notes) into beautiful, semantic, dependency-free HTML components pre-styled with Tailwind CSS.✍️ Automated SEO Content Generation Pipeline: Compiles raw technical attributes into structured data packages ready to feed programmatic LLM copywriting workflows, generating rich, unique descriptions optimized for organic search rankings.🛡️ Robust Automation Design: Built on top of Playwright with advanced stealth practices to handle lazy-loaded elements, single-page application (SPA) state transitions, and asynchronous asset loading.🛠️ Tech StackLanguage: Python 3.10+ – Leveraged for clean, type-hinted data manipulation pipelines.Browser Automation: Playwright for Python – High-performance, asynchronous headless browser interaction.Styling & UI Generation: Tailwind CSS Engine – For generating highly optimized, responsive, modern card layouts and visualization bars.Data Parsing: BeautifulSoup4 & Native JSON – Fast, reliable markup parsing and structured payload serialization.⚙️ Prerequisites & InstallationEnsure you have Python 3.10 or higher installed on your environment.1. Clone the Repositorygit clone https://github.com/yourusername/fragrantica-automation-engine.git
+cd fragrantica-automation-engine
+2. Set Up a Virtual Environment# Create virtual environment
 python -m venv venv
-source venv/bin/activate  # On Windows use: venv\Scripts\activate
 
+# Activate on Windows (PowerShell)
+.\venv\Scripts\activate
 
-Install dependencies:
-
+# Activate on Linux/macOS
+source venv/bin/activate
+3. Install Dependencies & Playwright Browsers# Install required Python packages
 pip install -r requirements.txt
 
-
-Install Playwright headless browser binaries:
-
+# Install headless browser binaries required by Playwright
 playwright install chromium
-
-
-💻 Usage
-
-AromaFlow provides a straightforward command-line interface. Run the pipeline against a specific product page URL:
-
-python main.py --url "https://www.fragrantica.com/perfume/Brand/Perfume-Name.html" --output-dir ./product_data
-
-
-Expected Output
-
-Upon successful execution, the script automatically exports production-ready visual components and structured content directly into your output directory:
-
-product_data/
-├── seo_description.md       # Tailored markdown description for your e-shop
-├── seo_metadata.json        # Structured JSON with key olfactory metadata
-└── components/
-    ├── longevity_chart.html # Responsive, standalone Tailwind CSS component
-    ├── sillage_chart.html   # Standalone Sillage HTML visual component
-    └── notes_pyramid.html   # Clean HTML representation of top, middle, & base notes
-
-
-📁 Project Structure
-
-├── main.py                # Primary entry point & CLI controller
-├── scraper/
-│   ├── engine.py          # Playwright initialization & web drivers
-│   └── extractors.py      # Target scrapers parsing text, ratings, and parameters
-├── chart_converter/
-│   ├── vue_parser.py      # Injects evaluation layers to extract Vue.js component states
-│   └── tailwind_gen.py    # Translates states to responsive Tailwind HTML code
-├── content_generator/
-│   └── seo_builder.py     # Parses text data to assemble SEO-ready copy
-├── requirements.txt       # Python dependency declarations
-└── README.md              # Project documentation
-
-
-🤝 Contributing
-
-We welcome contributions to expand AromaFlow's automation capabilities. If you have suggestions for improved parsers, additional component templates, or scraper performance tuning:
-
-Fork the project repository.
-
-Create your feature branch (git checkout -b feature/AmazingFeature).
-
-Commit your changes (git commit -m 'Add some AmazingFeature').
-
-Push to the branch (git push origin feature/AmazingFeature).
-
-Open a Pull Request.
-
-📄 License
-
-Distributed under the MIT License. See LICENSE for more details.
-
-Built with precision to let you focus on the art of perfumery. 🌹
+💻 UsageThe system is split into modular execution layers allowing you to either scrape raw data profiles or directly compile ready-to-use e-commerce frontend components.Ingesting Fragrantica Data ProfilesTo target a specific perfume URL and export its raw structured profile data:python run_scraper.py --url "https://www.fragrantica.com/perfume/Path-To-Target-Perfume.html" --output data/profiles/
+Building the Gallery Frontend ComponentsTo translate an ingested data profile into standalone, offline Tailwind CSS components:python compile_components.py --source data/profiles/target-perfume.json --output dist/components/
+This will spit out independent, perfectly responsive blocks for your product tabs, including custom-drawn visual bars for Longevity, Sillage, and Season breakdown.📁 Project Structure├── config/
+│   └── settings.py          # Anti-bot profiles, viewport configurations, and selector maps.
+├── core/
+│   ├── scraper.py           # Core Playwright automation script and navigation layers.
+│   ├── parser.py            # Extracts dynamic data tables and serializes Vue.js states.
+│   └── compiler.py          # Translates raw metrics into beautiful HTML/Tailwind structures.
+├── data/                    # Temporary or long-term local storage for extracted JSON assets.
+├── templates/
+│   └── components/          # Semantic HTML templates mimicking modern, lightweight chart layouts.
+├── requirements.txt         # Package dependencies file.
+├── run_scraper.py           # CLI entrypoint for targeted scraping routines.
+└── compile_components.py    # CLI entrypoint for generation pipelines.
+core/scraper.py: Handles browser initialization, stealth configuration, and dynamic content discovery.core/parser.py: Decodes web metrics (voter statistics for sillage, longevity, gender bias) into clean numerical arrays.core/compiler.py: Inject compiled metrics directly into standard HTML layouts using Tailwind CSS utility classes.🤝 ContributingContributions are what make the open-source and developer automation communities such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.Fork the ProjectCreate your Feature Branch (git checkout -b feature/AmazingFeature)Commit your Changes (git commit -m 'Add some AmazingFeature')Push to the Branch (git push origin feature/AmazingFeature)Open a Pull Request📄 LicenseDistributed under the MIT License. See LICENSE for more information.
