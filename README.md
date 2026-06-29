@@ -59,8 +59,8 @@ Ensure you have **Python 3.10 or higher** installed on your environment.
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/fragrantica-automation-engine.git
-cd fragrantica-automation-engine
+git clone https://github.com/bardiaazvanian/fragrantica-data-scraper.git
+cd fragrantica-data-scraper
 ```
 
 ### 2. Set Up a Virtual Environment
