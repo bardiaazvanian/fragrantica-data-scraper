@@ -206,20 +206,34 @@ def main():
         print(f"Opening: {URL}")
         page.goto(URL, wait_until="load", timeout=60000)
         
-        print("Waiting 5 seconds for page load...")
-        page.wait_for_timeout(5000)
-
-        # Accept cookies if the banner appears
+        # ۱. بررسی فوری کوکی بلافاصله پس از لود اولیه صفحه (قبل از هر کار دیگری)
+        print("Checking for cookie banner immediately...")
         try:
-            cookie_btn = page.locator("button.sp_choice_type_11")
-            if cookie_btn.first.is_visible(timeout=5000):
-                cookie_btn.first.click()
-                print("Accepted cookies.")
+            # سلکتور دقیق کلاس‌های ارسالی شما به فرم CSS Selector استاندارد
+            cookie_selector = ".message-component.message-button.no-children.focusable.sp_choice_type_11"
+            
+            # کمی مکس برای رندر شدن لایه‌های حریم خصوصی وب‌سایت
+            page.wait_for_timeout(2000)
+            
+            # پیدا کردن المنت در صورتی که داخل آی‌فریم اختصاصی Sourcepoint باشد
+            cookie_inside_iframe = page.frame_locator("iframe[id^='sp_message_iframe']").locator(cookie_selector)
+            # پیدا کردن المنت در صفحه اصلی (محض احتیاط)
+            cookie_on_page = page.locator(cookie_selector)
+            
+            if cookie_inside_iframe.first.is_visible():
+                cookie_inside_iframe.first.click()
+                print("✅ Cookies ACCEPTED from iframe.")
                 page.wait_for_timeout(1000)
-        except:
-            print("No cookie banner found, continuing...")
+            elif cookie_on_page.first.is_visible():
+                cookie_on_page.first.click()
+                print("✅ Cookies ACCEPTED from main page.")
+                page.wait_for_timeout(1000)
+            else:
+                print("No cookie banner detected immediately.")
+        except Exception as e:
+            print(f"Cookie check finished with notice: {e}")
 
-        # Auto-scroll down 400px x 4 times to load lazy content
+        # ۲. ادامه‌ی روند اسکرول برای لود شدن کامل محتوای اصلی نوت‌ها
         print("Auto-scrolling page...")
         for i in range(4):
             page.evaluate(f"window.scrollBy(0, 400)")
