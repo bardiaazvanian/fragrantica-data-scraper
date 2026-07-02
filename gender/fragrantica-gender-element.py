@@ -2,19 +2,35 @@
 from playwright.sync_api import sync_playwright
 import time
 import re
+import urllib.request
 
 URL = "https://www.fragrantica.com/perfume/Giorgio-Armani/Emporio-Armani-Stronger-With-You-Intensely-52802.html"
-OUTPUT_HTML_PATH = "fragrantica-performance-element.html"
+OUTPUT_HTML_PATH = "fragrantica-gender-element.html"
 DEBUG_IMAGE_PATH = "cloudflare_gender_check.png"
 
-def wrap_with_style(card_html):
+def download_tailwind():
+    """Download Tailwind CSS JS so the output HTML works offline."""
+    url = "https://cdn.tailwindcss.com"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            return resp.read().decode("utf-8")
+    except Exception as e:
+        print(f"⚠️ Could not download Tailwind CSS: {e}")
+        return None
+
+def wrap_with_style(card_html, tailwind_js=None):
+    if tailwind_js:
+        tailwind_tag = f"<script>{tailwind_js}</script>"
+    else:
+        tailwind_tag = '<script src="https://cdn.tailwindcss.com"></script>'
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fragrantica Gender Card - Perfect Color</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    {tailwind_tag}
     <style>
         /* استایل پایه مینیمال */
         .minimal-container {{
@@ -63,6 +79,13 @@ def wrap_with_style(card_html):
 """
 
 def main():
+    print("Downloading Tailwind CSS for offline use...")
+    tailwind_js = download_tailwind()
+    if tailwind_js:
+        print(f"✅ Tailwind CSS downloaded ({len(tailwind_js)//1024} KB) - HTML will work offline")
+    else:
+        print("⚠️ Tailwind not downloaded - HTML will need internet")
+
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
         context = browser.new_context(
@@ -160,7 +183,7 @@ def main():
             # پاکسازی استایل اینلاین در صورت وجود
             clean_html = clean_html.replace('style="background-color: rgb(229, 231, 235) !important; background-image: none !important;"', '')
 
-            final_html = wrap_with_style(clean_html)
+            final_html = wrap_with_style(clean_html, tailwind_js)
             with open(OUTPUT_HTML_PATH, "w", encoding="utf-8") as f:
                 f.write(final_html)
             print(f"🎉 فوق‌العاده! رنگ متون و لوگو با موفقیت به #4B5563 تغییر یافت → {OUTPUT_HTML_PATH}")
