@@ -9,7 +9,13 @@ URL = "https://www.fragrantica.com/perfume/Dior/Dior-Homme-Intense-2011-13016.ht
 SELECTOR = ".mt-6.space-y-1"
 OUTPUT_HTML_PATH = "fragrantica-html-top-notes.html"
 DEBUG_IMAGE_PATH = "cloudflare_check_playwright.png"
-NOTE_IMAGES_DIR = "note_images"
+
+# Shared directory for all note images — set once, reuse across all 250 perfumes.
+# Images are only downloaded if they don't already exist, so no duplicates.
+# Use a path that works both on disk AND as the src in your website HTML.
+
+# You change the directory to your preferred location, but make sure to keep it consistent across all scripts.
+NOTE_IMAGES_DIR = r"D:\shared-image"
 
 def wrap_with_style(raw_html):
     return f"""<!DOCTYPE html>
@@ -93,8 +99,7 @@ def wrap_with_style(raw_html):
         /* ۲. حذف تمام بک‌گراندها و سایه‌های مزاحم */
         .minimal-container div,
         .minimal-container p,
-        .minimal-container span,
-        .minimal-container a {{
+        .minimal-container span {{
             background-color: transparent !important;
             background: transparent !important;
             box-shadow: none !important;
@@ -102,10 +107,9 @@ def wrap_with_style(raw_html):
 
         /* رنگ خاکستری متون در حالت عادی */
         .minimal-container,
-        .minimal-container div, 
-        .minimal-container span, 
-        .minimal-container p,
-        .minimal-container a {{
+        .minimal-container div,
+        .minimal-container span,
+        .minimal-container p {{
             color: #52525B !important;
             text-decoration: none !important;
         }}
@@ -166,9 +170,10 @@ def wrap_with_style(raw_html):
         }}
         
         /* ✨ حالت هاور فیروزه‌ای اختصاصی شما روی نوت‌ها */
-        .minimal-container a:hover,
-        .minimal-container a:hover * {{
+        .minimal-container .pyramid-note-item:hover,
+        .minimal-container .pyramid-note-item:hover * {{
             color: #43B1A8 !important;
+            cursor: default;
         }}
     </style>
 </head>
@@ -181,6 +186,16 @@ def wrap_with_style(raw_html):
 </body>
 </html>
 """
+
+def strip_note_links(html):
+    """Replace <a> links to fragrantica notes with plain <div> wrappers."""
+    html = re.sub(
+        r'<a\s+href="https://www\.fragrantica\.com/notes/[^"]*"([^>]*)>',
+        lambda m: '<div' + re.sub(r'\bpyramid-note-link\b', 'pyramid-note-item', m.group(1)) + '>',
+        html
+    )
+    html = html.replace('</a>', '</div>')
+    return html
 
 def download_note_images(html):
     """Download all note images from fimgs.net and replace URLs with local paths."""
@@ -272,6 +287,7 @@ def main():
             
             final_html = wrap_with_style(raw_html)
             final_html = download_note_images(final_html)
+            final_html = strip_note_links(final_html)
             
             with open(OUTPUT_HTML_PATH, "w", encoding="utf-8") as f:
                 f.write(final_html)
