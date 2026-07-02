@@ -6,7 +6,7 @@ URL = "https://www.fragrantica.com/perfume/Giorgio-Armani/Emporio-Armani-Stronge
 OUTPUT_HTML_PATH = "fragmentia-html-scraper-seasons.html"
 DEBUG_IMAGE_PATH = "cloudflare_check_playwright.png"
 
-def wrap_with_style(raw_html):
+def wrap_with_style_cdn(raw_html):
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,22 +15,51 @@ def wrap_with_style(raw_html):
     <title>Fragrantica - When To Wear</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* تکست‌های داخل مربع‌ها و لیبل‌ها کاملاً وسط‌چین شوند */
         .minimal-container * {{
             text-align: center !important;
         }}
-        /* حفظ جهت طبیعی افقی (چپ به راست) برای نمودارها و باکس‌های فصول */
         .minimal-container {{
             direction: ltr !important;
         }}
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
-
     <div class="minimal-container bg-white p-8 rounded-2xl shadow-sm border border-gray-100 w-full max-w-3xl transition-all duration-300 hover:shadow-md">
         {raw_html}
     </div>
+</body>
+</html>
+"""
 
+def make_offline_html(browser, raw_html):
+    temp_html = wrap_with_style_cdn(raw_html)
+    page = browser.new_page()
+    page.set_content(temp_html, wait_until="networkidle")
+    page.wait_for_timeout(3000)
+
+    all_css = page.evaluate("""() => {
+        let css = '';
+        for (const style of document.querySelectorAll('style')) {
+            css += style.textContent + '\\n';
+        }
+        return css;
+    }""")
+    page.close()
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fragrantica - When To Wear</title>
+    <style>
+{all_css}
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+    <div class="minimal-container bg-white p-8 rounded-2xl shadow-sm border border-gray-100 w-full max-w-3xl transition-all duration-300 hover:shadow-md">
+        {raw_html}
+    </div>
 </body>
 </html>
 """
@@ -71,7 +100,8 @@ def main():
         }""")
 
         if raw_html:
-            final_html = wrap_with_style(raw_html)
+            print("Compiling Tailwind CSS for offline use...")
+            final_html = make_offline_html(browser, raw_html)
             with open(OUTPUT_HTML_PATH, "w", encoding="utf-8") as f:
                 f.write(final_html)
             print(f"🎉 فوق‌العاده! بخش When To Wear با موفقیت استخراج و ذخیره شد → {OUTPUT_HTML_PATH}")
