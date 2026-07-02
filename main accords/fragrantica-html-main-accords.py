@@ -34,6 +34,20 @@ def wrap_with_style(raw_html):
 </html>
 """
 
+def inline_tailwind(page, html_with_cdn):
+    page.set_content(html_with_cdn, wait_until="networkidle")
+    page.wait_for_timeout(2000)
+
+    inlined_css = page.evaluate("""() => {
+        const sheets = document.querySelectorAll('style');
+        return Array.from(sheets).map(s => s.textContent).join('\\n');
+    }""")
+
+    return html_with_cdn.replace(
+        '<script src="https://cdn.tailwindcss.com"></script>',
+        f'<style>\\n{inlined_css}\\n</style>'
+    )
+
 def main():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
@@ -63,16 +77,21 @@ def main():
         if matched:
             element = matched[0]
             raw_html = element.evaluate("el => el.outerHTML")
-            final_html = wrap_with_style(raw_html)
-            
+            html_with_cdn = wrap_with_style(raw_html)
+
+            print("⏳ در حال تبدیل Tailwind به CSS آفلاین...")
+            inline_page = browser.new_page()
+            final_html = inline_tailwind(inline_page, html_with_cdn)
+            inline_page.close()
+
             with open(OUTPUT_HTML_PATH, "w", encoding="utf-8") as f:
                 f.write(final_html)
-                
+
             print(f"✅ فایل شیک و مینیمال ذخیره شد → {OUTPUT_HTML_PATH}")
         else:
             print("❌ خطا: المنت پیدا نشد.")
 
-        page.wait_for_timeout(2000) 
+        page.wait_for_timeout(2000)
         browser.close()
 
 if __name__ == "__main__":
